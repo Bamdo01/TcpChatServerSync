@@ -30,9 +30,9 @@ namespace NEXTCHATServ.Core
                     // 0 바이트 읽은 경우 → 연결 종료된 것임
                     if (bytesRead == 0) break;
 
-                    // 받은 데이터를 UTF8 문자열로 변환
-                    //string message = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
-                    //Console.WriteLine($"수신: {message}");
+                     //받은 데이터를 UTF8 문자열로 변환
+                    string message = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
+                    Console.WriteLine($"수신: {message}");
 
                     //// 명령어 처리기(CommandProcessor)에 메시지를 전달하고 응답 받기
                     /// 애초에 반환값을 바이트로 만들기

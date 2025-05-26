@@ -148,6 +148,8 @@ namespace NEXTCHATServ.Core
             string userId = parser.ReadString();    // 보낸 사람 ID
             string message = parser.ReadString();   // 채팅 내용
 
+            Console.WriteLine($"아이디: {userId} 메세지:{message}");
+
             ChatMessage chatMsg = new ChatMessage
             {
                 FromUserId = userId,
@@ -155,12 +157,17 @@ namespace NEXTCHATServ.Core
                 Timestamp = DateTime.Now
             };
 
+
+
             //목표 chatMsg를 DB에 저장후 프로토콜에 맞춰서 바이트코드로 변환한뒤 클라이언트 매니져에있는 클라이언트 딕셔너리에서 자신의 아이디를 제외한후 브로드 캐스트 하기
             //1. UserRepository.SaveChatMessage(chatMsg); DB 저장완료
             //2. public static byte[] BuildChatPacket(ChatMessage chatMsg) 하면 프로토콜에 맞춰서 바이트 코드로 변환
             //3. 바이트코드와, userId를 매개변수로 삼는 브로드 캐스트 함수가 필요
             //4. 락을 걸어야 하기 떄문에 클라이언트 매니져에서 딕셔너리 접근할것 나를 제외한 아이디와 클라이언트 정보를 반환하는 로직을 어디에? 클라이언트 매니져에 생성하기
+            
+            
             UserRepository.SaveChatMessage(chatMsg);
+
             ChatBroadcaster.BroadcastChat(chatMsg, userId);
 
             return new byte[] { (byte)ResponseCode.Success }; // 단순히 수신 성공 응답
