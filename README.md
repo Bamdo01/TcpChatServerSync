@@ -49,3 +49,20 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     message TEXT NOT NULL,
     sent_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+```
+
+## 🌐 통신 프로토콜
+
+서버와 클라이언트는 다음 형식의 바이너리 패킷으로 통신합니다. 문자열은 [2바이트 길이 정보] + [UTF-8 바이트 배열]로 직렬화됩니다
+
+## 🚀 실행 방법
+
+1. Prerequisites: .NET SDK, MySQL Server 설치
+2. MySQL에 `NEXTCHAT` 데이터베이스를 생성합니다.
+3. `Database/DbManager.cs` 파일의 연결 문자열(`connStr`)을 자신의 DB 환경에 맞게 수정합니다.
+4. 프로젝트를 빌드하고 실행합니다.
+5. 서버 콘솔에 `[서버] 시작됨 - 포트: 9000` 메시지가 표시되면 정상적으로 실행된 것입니다.
+6. 
+## ✨ 향후 개선 과제
+
+* ** 비동기 I/O 모델로 전환
