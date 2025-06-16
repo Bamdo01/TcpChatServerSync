@@ -15,9 +15,6 @@
 * **데이터베이스:** MySQL (with `MySqlConnector`)
 * **핵심 기술:** TCP/IP 소켓 프로그래밍 (`TcpListener`, `TcpClient`), 멀티스레딩 (`Thread`)
 
-### 아키텍처 다이어그램
-
-[여기에 아키텍처 다이어그램 이미지를 삽입하세요]
 
 ### 주요 설계 특징
 * **계층형 아키텍처:** `Core`, `Network`, `Database`, `Managers` 등 기능별로 프로젝트를 분리하여 코드의 응집도와 재사용성을 높였습니다.
