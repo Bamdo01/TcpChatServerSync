@@ -4,12 +4,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using NEXTCHATServ.Core;
-using NEXTCHATServ.Database;
-using NEXTCHATServ.Managers;
+using TcpChatServerSync.Core;
+using TcpChatServerSync.Database;
+using TcpChatServerSync.Managers;
 
 
-namespace NEXTCHATServ
+namespace TcpChatServerSync
 {
     class Program
     {

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using NEXTCHATServ.Model;
-using NEXTCHATServ.Network;
-using NEXTCHATServ.Managers;
+using TcpChatServerSync.Managers;
+using TcpChatServerSync.Model;
+using TcpChatServerSync.Network;
 
 
-namespace NEXTCHATServ.Core
+namespace TcpChatServerSync.Core
 {
     public static class ChatBroadcaster
     {

@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace NEXTCHATServ.Core
+namespace TcpChatServerSync.Core
 {
     public static class Server
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NEXTCHATServ.Model
+namespace TcpChatServerSync.Model.Request
 {
     public class LoginRequest
     {

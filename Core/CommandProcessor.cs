@@ -4,13 +4,14 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using NEXTCHATServ.Model;
-using NEXTCHATServ.Network;
-using NEXTCHATServ.Database;
-using NEXTCHATServ.Managers;
 using static System.Net.Mime.MediaTypeNames;
+using TcpChatServerSync.Model;
+using TcpChatServerSync.Model.Enums;
+using TcpChatServerSync.Database;
+using TcpChatServerSync.Network;
+using TcpChatServerSync.Managers;
 
-namespace NEXTCHATServ.Core
+namespace TcpChatServerSync.Core
 {
     /// <summary>
     /// 클라이언트로부터 수신된 명령을 처리하는 클래스
@@ -42,9 +43,9 @@ namespace NEXTCHATServ.Core
                     // 로그인 처리
                     return HandleLogin(parser, client);
 
-                case CommandCode.FINDID:
-                    // ID 찾기 처리
-                    return HandleIdSearch(parser);
+                //case CommandCode.FINDID:
+                //    // ID 찾기 처리
+                //    return HandleIdSearch(parser);
 
                 case CommandCode.CHATMSG:
                     // 채팅 처리
@@ -52,7 +53,7 @@ namespace NEXTCHATServ.Core
 
                 default:
                     // 알 수 없는 명령 처리
-                    return new byte[] { (byte)ResponseCode.IdNotFound };
+                    return new byte[] { (byte)ResponseCode.UnknownCommand };
             }
         }
 
@@ -71,7 +72,7 @@ namespace NEXTCHATServ.Core
             GenderCode gender = (GenderCode)genderCodeByte;
 
             //벌스 데이트에 저장
-            DateTime birthDate = new((short)birthYear, birthMonth, birthDay);
+            DateTime birthDate = new(birthYear, birthMonth, birthDay);
 
 
             Console.WriteLine($"[회원가입 요청] ID: {userId}, PW: {password}, PN: {userPhone} 성별: {gender} 생일: {birthDate:yyyy-MM-dd}");
@@ -95,20 +96,22 @@ namespace NEXTCHATServ.Core
 
                 if (!isInserted)
                 {
-                    //TODO: DB 오류 ENUM 추가한뒤 올려주기
-                    Console.WriteLine("회원가입 실패 (DB 오류)");
-                   // return new byte[] { (byte)ResponseCode.InternalError };
+                    
+                    Console.WriteLine("회원가입 실패 데이터 포멧이 잘못되지 않을까.. 예외처");
+                    return new byte[] { (byte)ResponseCode.IdAlreadyExists };
                 }
                 else
                 {
                     Console.WriteLine("회원가입 성공");
-                    return new byte[] { (byte)ResponseCode.Success };
+                    return new byte[] { (byte)ResponseCode.RegisterSuccess };
                 }
 
 
             }
-            //실패 반환
-            return new byte[] { (byte)ResponseCode.DuplicateId};
+            //실패 반환(중복아이디)
+            Console.WriteLine("회원가입 실패(중복아이디)");
+            return new byte[] { (byte)ResponseCode.IdAlreadyExists};
+            
 
         }
 
@@ -121,24 +124,39 @@ namespace NEXTCHATServ.Core
 
             Console.WriteLine($"[로그인 요청] ID: {userId}, PW: {password}");
 
-            //클라이언트 딕셔너리에 추가
-            ClientManager.TryAddClient(userId, client);
+            // 로그인 검증
+            bool isLoginSuccess = UserRepository.Login(userId, password);
 
-            // TODO: 로그인 검증 로직 필요
-            return new byte[] { (byte)ResponseCode.Success };
+            if (isLoginSuccess)
+            {
+                // 클라이언트 목록에 추가
+                ClientManager.TryAddClient(userId, client);
+
+                Console.WriteLine($"[로그인 성공] 사용자: {userId}");
+
+                //클라이언트 딕셔너리에 추가
+                ClientManager.TryAddClient(userId, client);
+
+                return new byte[] { (byte)ResponseCode.LoginSuccess }; // 0 또는 정의된 성공 코드
+            }
+            else
+            {
+                Console.WriteLine($"[로그인 실패] 사용자: {userId}");
+                return new byte[] { (byte)ResponseCode.LoginFail }; // 실패 코드 정의 필요
+            }
         }
 
         
-        //아이디 검색 처리
-        private static byte[] HandleIdSearch(PacketParser parser)
-        {
-            string userId = parser.ReadString();       // ID
+        ////아이디 검색 처리
+        //private static byte[] HandleIdSearch(PacketParser parser)
+        //{
+        //    string userId = parser.ReadString();       // ID
 
-            Console.WriteLine($"[ID 검색 요청] ID: {userId}");
+        //    Console.WriteLine($"[ID 검색 요청] ID: {userId}");
 
-            // TODO: ID 존재 여부 확인 로직 추가 필요
-            return new byte[] { (byte)ResponseCode.Success }; // 또는 "IdNotFound"
-        }
+        //    // TODO: ID 존재 여부 확인 로직 추가 필요
+        //    return new byte[] { (byte)ResponseCode.Success }; // 또는 "IdNotFound"
+        //}
 
 
         //나중에 시간 추가하기
@@ -170,7 +188,7 @@ namespace NEXTCHATServ.Core
 
             ChatBroadcaster.BroadcastChat(chatMsg, userId);
 
-            return new byte[] { (byte)ResponseCode.Success }; // 단순히 수신 성공 응답
+            return null; // 단순히 수신 성공 응답 해줄 필요 없는데
         }
     }
 }
