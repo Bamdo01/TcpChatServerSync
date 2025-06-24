@@ -66,4 +66,5 @@ CREATE TABLE IF NOT EXISTS chat_messages (
 
 ## ✨ 향후 개선 과제
 
-* ** 비동기 I/O 모델로 전환
+* ** 비동기 I/O 모델 전환
+* https://github.com/Bamdo01/TcpChatServerAsync.git V2 버전입니다
